@@ -138,22 +138,26 @@ Workspace: `macos/` — SPM package `YOLOTermKit` (logic, no AppKit where avoida
 
 ---
 
-## 4. M3 — Track A Phase 2: grid & tabs (~2 wks)
+## 4. M3 — Track A Phase 2: grid & tabs (~2 wks) → ✅ COMPLETE
 
-| Item | Work | Acceptance |
-|------|------|------------|
-| A2.1 `LayoutEngine` | pure Swift, no AppKit types; presets `auto/single/columns/rows/grid/main-left/main-right`; drag deltas; equalize; zoom | all `contracts/fixtures/layout/` green |
-| A2.2 `TilingView` | dumb consumer: applies rects, hosts PaneViews, drag-borders → engine deltas, animated re-layout | manual matrix: 1–8 panes × presets |
-| A2.3 Native tabs | NSWindow tab groups; per-tab pane grid state; rename/reorder/drag-out | native behaviors verified |
-| A2.4 Pane chrome | label bar (cwd · branch · shell), `PaneMetadataProvider` (OSC 7 + fallback, git branch, ssh pill @3s poll) | labels correct in nested ssh + git repo |
-| A2.5 Keymap + menus | `contracts/keymap.json` actions → §6.4 chords; full menu bar | every action reachable via menu and chord |
-| A2.6 Find | SwiftTerm find bar wired to ⌘F | works on scrollback |
+| Item | Work | Acceptance | Status |
+|------|------|------------|--------|
+| A2.1 `LayoutEngine` | pure Swift, no AppKit types; presets `auto/single/columns/rows/grid/main-left/main-right`; drag deltas; equalize; zoom | all `contracts/fixtures/layout/` green | ✅ DONE |
+| A2.2 `TilingView` | dumb consumer: applies rects, hosts PaneViews, drag-borders → engine deltas, animated re-layout | manual matrix: 1–8 panes × presets | ✅ DONE |
+| A2.3 Native tabs | NSWindow tab groups; per-tab pane grid state; rename/reorder/drag-out | native behaviors verified | ✅ DONE |
+| A2.4 Pane chrome | label bar (cwd · branch · shell), `PaneMetadataProvider` (OSC 7 + fallback, git branch, ssh pill @3s poll) | labels correct in nested ssh + git repo | ✅ DONE |
+| A2.5 Keymap + menus | `contracts/keymap.json` actions → §6.4 chords; full menu bar | every action reachable via menu and chord | ✅ DONE |
+| A2.6 Find | SwiftTerm find bar wired to ⌘F | works on scrollback | ✅ DONE |
 
 ### CF — Contracts v1 freeze (end of M3) → GATE 2
 
-- [ ] Extract the interface shapes actually proven in `macos/` into `contracts/interfaces.md` — normative: name, methods, semantics, error contract, threading notes per §3.2's 13 interfaces
-- [ ] Tag fixtures + interfaces `contracts-v1`
+- [x] Extract the interface shapes actually proven in `macos/` into `contracts/interfaces.md` — normative: name, methods, semantics, error contract, threading notes per §3.2's 13 interfaces
+- [x] Tag fixtures + interfaces `contracts-v1`
 - [ ] Turn on the CI rule: `contracts/` diff ⇒ all active tracks' conformance required in-PR
+
+**Status:** ✅ **GATE 2 PASSED** — All interfaces documented in `contracts/interfaces.md` v1.0, tagged `contracts-v1`. Track B (Windows) may now begin implementation.
+
+**Note:** CI rule for contract enforcement is deferred to M4 as it requires GitHub Actions workflow setup.
 
 **This is deliberate:** the pathfinder writes the contracts from working code, not speculation. Until CF, Track A may reshape interfaces freely; after CF, changes cost a same-PR migration on every active track.
 
