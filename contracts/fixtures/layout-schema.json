@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://yolovibescode.org/yoloterm/layout-fixture.schema.json",
+  "title": "YOLOTerm Layout Fixture",
+  "description": "Layout engine conformance test case (all tracks)",
+  "type": "object",
+  "required": ["name", "input", "expected"],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable test case name"
+    },
+    "input": {
+      "type": "object",
+      "required": ["containerSize", "panes", "preset"],
+      "properties": {
+        "containerSize": {
+          "type": "object",
+          "required": ["width", "height"],
+          "properties": {
+            "width": { "type": "number", "minimum": 1 },
+            "height": { "type": "number", "minimum": 1 }
+          }
+        },
+        "panes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id"],
+            "properties": {
+              "id": { "type": "string" }
+            }
+          },
+          "minItems": 1
+        },
+        "preset": {
+          "type": "string",
+          "enum": ["auto", "single", "columns", "rows", "grid", "main-left", "main-right"]
+        },
+        "dragDeltas": {
+          "type": "array",
+          "description": "Optional: drag events to apply before computing final layout",
+          "items": {
+            "type": "object",
+            "required": ["edge", "delta"],
+            "properties": {
+              "edge": { "type": "string" },
+              "delta": { "type": "number" }
+            }
+          }
+        }
+      }
+    },
+    "expected": {
+      "type": "array",
+      "description": "Expected pane rectangles after layout",
+      "items": {
+        "type": "object",
+        "required": ["id", "x", "y", "width", "height"],
+        "properties": {
+          "id": { "type": "string" },
+          "x": { "type": "number", "minimum": 0 },
+          "y": { "type": "number", "minimum": 0 },
+          "width": { "type": "number", "minimum": 1 },
+          "height": { "type": "number", "minimum": 1 }
+        }
+      }
+    }
+  }
+}

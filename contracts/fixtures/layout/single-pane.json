@@ -1,0 +1,14 @@
+{
+  "$schema": "../layout-schema.json",
+  "name": "Single pane (full container)",
+  "input": {
+    "containerSize": { "width": 800, "height": 600 },
+    "panes": [
+      { "id": "pane-1" }
+    ],
+    "preset": "single"
+  },
+  "expected": [
+    { "id": "pane-1", "x": 0, "y": 0, "width": 800, "height": 600 }
+  ]
+}

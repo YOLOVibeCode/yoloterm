@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Semantic keymap actions for YOLOTerm (all tracks). Chords are per-track.",
+  "version": "1.0.0",
+  "actions": {
+    "clipboard": {
+      "Copy": "Copy selected text to clipboard",
+      "Paste": "Paste clipboard contents",
+      "CopyAlways": "Force copy (even when no selection, track-specific behavior)"
+    },
+    "tabs": {
+      "NewTab": "Create new tab",
+      "CloseTab": "Close current tab",
+      "NextTab": "Switch to next tab",
+      "PrevTab": "Switch to previous tab",
+      "SelectTab1": "Switch to tab 1",
+      "SelectTab2": "Switch to tab 2",
+      "SelectTab3": "Switch to tab 3",
+      "SelectTab4": "Switch to tab 4",
+      "SelectTab5": "Switch to tab 5",
+      "SelectTab6": "Switch to tab 6",
+      "SelectTab7": "Switch to tab 7",
+      "SelectTab8": "Switch to tab 8",
+      "SelectTab9": "Switch to tab 9 (or last tab)"
+    },
+    "panes": {
+      "NewPaneRight": "Split current pane to the right",
+      "NewPaneDown": "Split current pane downward",
+      "ClosePane": "Close current pane",
+      "FocusPaneUp": "Focus pane above",
+      "FocusPaneDown": "Focus pane below",
+      "FocusPaneLeft": "Focus pane to the left",
+      "FocusPaneRight": "Focus pane to the right",
+      "SelectPane1": "Focus pane 1",
+      "SelectPane2": "Focus pane 2",
+      "SelectPane3": "Focus pane 3",
+      "SelectPane4": "Focus pane 4",
+      "SelectPane5": "Focus pane 5",
+      "SelectPane6": "Focus pane 6",
+      "SelectPane7": "Focus pane 7",
+      "SelectPane8": "Focus pane 8",
+      "SelectPane9": "Focus pane 9",
+      "ZoomPane": "Toggle pane zoom (maximize/restore)"
+    },
+    "search": {
+      "FindInTerminal": "Find text in terminal output (in-pane search)",
+      "HistorySearchPane": "Search command history (pane-scoped)",
+      "HistorySearchGlobal": "Search command history (all panes, all time)"
+    },
+    "view": {
+      "FontBigger": "Increase font size",
+      "FontSmaller": "Decrease font size",
+      "FontReset": "Reset font size to default"
+    },
+    "system": {
+      "CommandPalette": "Open command palette",
+      "Settings": "Open settings",
+      "Quit": "Quit application"
+    }
+  },
+  "notes": {
+    "chords": "Each track binds these actions to platform-idiomatic chords (SPEC §6.4, §7.4)",
+    "macOS": "Cmd-based (no Ctrl conflict with terminal control codes)",
+    "Windows": "Ctrl-based with selection-aware Ctrl+C (copies if selection, else SIGINT)",
+    "Linux": "Ctrl-based, follows Windows Terminal conventions"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "$schema": "./theme-schema.json",
+  "id": "terminal-default",
+  "name": "Terminal Default (Vivid)",
+  "description": "Default vivid xterm ANSI palette - does not remap ANSI-16 colors",
+  "background": "#1e1e1e",
+  "foreground": "#d4d4d4",
+  "cursor": "#ffffff",
+  "cursorAccent": "#1e1e1e",
+  "selectionBackground": "#264f78",
+  "useDefaultAnsi": true
+}

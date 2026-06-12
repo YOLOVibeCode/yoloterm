@@ -1,0 +1,10 @@
+<Window x:Class="WTControlSpike.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:terminal="clr-namespace:EasyTerminalControl;assembly=EasyWindowsTerminalControl"
+        Title="Windows Terminal Control Spike" Height="600" Width="800"
+        Loaded="Window_Loaded">
+    <Grid>
+        <terminal:TermControl x:Name="Terminal" />
+    </Grid>
+</Window>

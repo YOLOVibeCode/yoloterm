@@ -1,0 +1,78 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Privacy redaction patterns for command history (all tracks)",
+  "patterns": [
+    {
+      "name": "Environment variable secrets",
+      "regex": "(?i)(password|token|key|secret|api_key|auth|credential)=\\S+",
+      "replacement": "$1=***REDACTED***",
+      "reason": "Prevent credential leakage in history"
+    },
+    {
+      "name": "AWS credentials",
+      "regex": "(?i)(AWS_ACCESS_KEY_ID|AWS_SECRET_ACCESS_KEY|AWS_SESSION_TOKEN)=\\S+",
+      "replacement": "$1=***REDACTED***",
+      "reason": "AWS credential protection"
+    },
+    {
+      "name": "Database connection strings",
+      "regex": "(?i)(postgres|mysql|mongodb)://[^@]+:([^@]+)@",
+      "replacement": "$1://user:***REDACTED***@",
+      "reason": "Database password in connection string"
+    },
+    {
+      "name": "Bearer tokens",
+      "regex": "(?i)(bearer|authorization:\\s*bearer)\\s+[A-Za-z0-9_\\-\\.]+",
+      "replacement": "$1 ***REDACTED***",
+      "reason": "OAuth/JWT bearer tokens"
+    },
+    {
+      "name": "SSH private key references",
+      "regex": "-----BEGIN (RSA|DSA|EC|OPENSSH) PRIVATE KEY-----",
+      "replacement": "***PRIVATE KEY REDACTED***",
+      "reason": "SSH private keys should never be in commands"
+    },
+    {
+      "name": "Credit card numbers",
+      "regex": "\\b\\d{4}[\\s\\-]?\\d{4}[\\s\\-]?\\d{4}[\\s\\-]?\\d{4}\\b",
+      "replacement": "***CARD NUMBER REDACTED***",
+      "reason": "PCI compliance"
+    },
+    {
+      "name": "GitHub/GitLab personal access tokens",
+      "regex": "(?i)(gh[pousr]_[A-Za-z0-9_]{36,}|glpat-[A-Za-z0-9_\\-]{20,})",
+      "replacement": "***TOKEN REDACTED***",
+      "reason": "Git platform tokens"
+    },
+    {
+      "name": "Generic hex secrets",
+      "regex": "(?i)(secret|token|key|password|api_key)\\s*[=:]\\s*['\"]?[0-9a-f]{32,}['\"]?",
+      "replacement": "$1=***REDACTED***",
+      "reason": "Hex-encoded secrets"
+    }
+  ],
+  "notes": {
+    "application": "Applied before inserting commands into history database",
+    "performance": "Patterns compiled once at app startup, cached",
+    "false_positives": "Err on the side of over-redaction for security",
+    "user_override": "Users can disable via settings (at their own risk)"
+  },
+  "test_cases": [
+    {
+      "input": "export DATABASE_PASSWORD=supersecret123",
+      "expected": "export DATABASE_PASSWORD=***REDACTED***"
+    },
+    {
+      "input": "curl -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'",
+      "expected": "curl -H 'Authorization: Bearer ***REDACTED***'"
+    },
+    {
+      "input": "psql postgres://admin:mypass@localhost/db",
+      "expected": "psql postgres://user:***REDACTED***@localhost/db"
+    },
+    {
+      "input": "echo 4532-1234-5678-9012",
+      "expected": "echo ***CARD NUMBER REDACTED***"
+    }
+  ]
+}

@@ -1,0 +1,767 @@
+[
+  {
+    "name": "ANSI-16 foreground colors (SGR 30-37, 90-97)",
+    "input_b64": "XHgxYlszMG3ilohceDFiWzMxbeKWiFx4MWJbMzJt4paIXHgxYlszM23ilohceDFiWzM0beKWiFx4MWJbMzVt4paIXHgxYlszNm3ilohceDFiWzM3beKWiFx4MWJbOTBt4paIXHgxYls5MW3ilohceDFiWzkybeKWiFx4MWJbOTNt4paIXHgxYls5NG3ilohceDFiWzk1beKWiFx4MWJbOTZt4paIXHgxYls5N23ilohceDFiWzBt",
+    "grid": [
+      [
+        {
+          "ch": "\u2588",
+          "fg": "#000000"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#cd0000"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#00cd00"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#cdcd00"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#0000ee"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#cd00cd"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#00cdcd"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#e5e5e5"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#7f7f7f"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#ff0000"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#00ff00"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#ffff00"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#5c5cff"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#ff00ff"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#00ffff"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#ffffff"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "ANSI-16 background colors (SGR 40-47, 100-107)",
+    "input_b64": "XHgxYls0MG0gXHgxYls0MW0gXHgxYls0Mm0gXHgxYls0M20gXHgxYls0NG0gXHgxYls0NW0gXHgxYls0Nm0gXHgxYls0N20gXHgxYlsxMDBtIFx4MWJbMTAxbSBceDFiWzEwMm0gXHgxYlsxMDNtIFx4MWJbMTA0bSBceDFiWzEwNW0gXHgxYlsxMDZtIFx4MWJbMTA3bSBceDFiWzBt",
+    "grid": [
+      [
+        {
+          "ch": " ",
+          "bg": "#000000"
+        },
+        {
+          "ch": " ",
+          "bg": "#cd0000"
+        },
+        {
+          "ch": " ",
+          "bg": "#00cd00"
+        },
+        {
+          "ch": " ",
+          "bg": "#cdcd00"
+        },
+        {
+          "ch": " ",
+          "bg": "#0000ee"
+        },
+        {
+          "ch": " ",
+          "bg": "#cd00cd"
+        },
+        {
+          "ch": " ",
+          "bg": "#00cdcd"
+        },
+        {
+          "ch": " ",
+          "bg": "#e5e5e5"
+        },
+        {
+          "ch": " ",
+          "bg": "#7f7f7f"
+        },
+        {
+          "ch": " ",
+          "bg": "#ff0000"
+        },
+        {
+          "ch": " ",
+          "bg": "#00ff00"
+        },
+        {
+          "ch": " ",
+          "bg": "#ffff00"
+        },
+        {
+          "ch": " ",
+          "bg": "#5c5cff"
+        },
+        {
+          "ch": " ",
+          "bg": "#ff00ff"
+        },
+        {
+          "ch": " ",
+          "bg": "#00ffff"
+        },
+        {
+          "ch": " ",
+          "bg": "#ffffff"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "256-color palette (first 16, SGR 38;5;N)",
+    "input_b64": "XHgxYlszODs1OzBt4paIXHgxYlszODs1OzFt4paIXHgxYlszODs1OzJt4paIXHgxYlszODs1OzNt4paIXHgxYlszODs1OzRt4paIXHgxYlszODs1OzVt4paIXHgxYlszODs1OzZt4paIXHgxYlszODs1Ozdt4paIXHgxYlszODs1Ozht4paIXHgxYlszODs1Ozlt4paIXHgxYlszODs1OzEwbeKWiFx4MWJbMzg7NTsxMW3ilohceDFiWzM4OzU7MTJt4paIXHgxYlszODs1OzEzbeKWiFx4MWJbMzg7NTsxNG3ilohceDFiWzM4OzU7MTVt4paIXHgxYlswbQ==",
+    "grid": [
+      [
+        {
+          "ch": "\u2588",
+          "fg": "#000000"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#cd0000"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#00cd00"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#cdcd00"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#0000ee"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#cd00cd"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#00cdcd"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#e5e5e5"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#7f7f7f"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#ff0000"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#00ff00"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#ffff00"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#5c5cff"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#ff00ff"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#00ffff"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#ffffff"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "256-color grayscale ramp (232-255)",
+    "input_b64": "XHgxYlszODs1OzIzMm3ilohceDFiWzM4OzU7MjMzbeKWiFx4MWJbMzg7NTsyMzRt4paIXHgxYlszODs1OzIzNW3ilohceDFiWzM4OzU7MjM2beKWiFx4MWJbMzg7NTsyMzdt4paIXHgxYlszODs1OzIzOG3ilohceDFiWzM4OzU7MjM5beKWiFx4MWJbMzg7NTsyNDBt4paIXHgxYlszODs1OzI0MW3ilohceDFiWzM4OzU7MjQybeKWiFx4MWJbMzg7NTsyNDNt4paIXHgxYlszODs1OzI0NG3ilohceDFiWzM4OzU7MjQ1beKWiFx4MWJbMzg7NTsyNDZt4paIXHgxYlszODs1OzI0N23ilohceDFiWzM4OzU7MjQ4beKWiFx4MWJbMzg7NTsyNDlt4paIXHgxYlszODs1OzI1MG3ilohceDFiWzM4OzU7MjUxbeKWiFx4MWJbMzg7NTsyNTJt4paIXHgxYlszODs1OzI1M23ilohceDFiWzM4OzU7MjU0beKWiFx4MWJbMzg7NTsyNTVt4paIXHgxYlswbQ==",
+    "grid": [
+      [
+        {
+          "ch": "\u2588",
+          "fg": "#080808"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#121212"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#1c1c1c"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#262626"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#303030"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#3a3a3a"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#444444"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#4e4e4e"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#585858"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#626262"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#6c6c6c"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#767676"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#808080"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#8a8a8a"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#949494"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#9e9e9e"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#a8a8a8"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#b2b2b2"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#bcbcbc"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#c6c6c6"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#d0d0d0"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#dadada"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#e4e4e4"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#eeeeee"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "Truecolor red gradient (SGR 38;2;R;G;B)",
+    "input_b64": "XHgxYlszODsyOzA7MDswbeKWiFx4MWJbMzg7MjsxNjswOzBt4paIXHgxYlszODsyOzMyOzA7MG3ilohceDFiWzM4OzI7NDg7MDswbeKWiFx4MWJbMzg7Mjs2NDswOzBt4paIXHgxYlszODsyOzgwOzA7MG3ilohceDFiWzM4OzI7OTY7MDswbeKWiFx4MWJbMzg7MjsxMTI7MDswbeKWiFx4MWJbMzg7MjsxMjg7MDswbeKWiFx4MWJbMzg7MjsxNDQ7MDswbeKWiFx4MWJbMzg7MjsxNjA7MDswbeKWiFx4MWJbMzg7MjsxNzY7MDswbeKWiFx4MWJbMzg7MjsxOTI7MDswbeKWiFx4MWJbMzg7MjsyMDg7MDswbeKWiFx4MWJbMzg7MjsyMjQ7MDswbeKWiFx4MWJbMzg7MjsyNDA7MDswbeKWiFx4MWJbMG0=",
+    "grid": [
+      [
+        {
+          "ch": "\u2588",
+          "fg": "#000000"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#100000"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#200000"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#300000"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#400000"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#500000"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#600000"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#700000"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#800000"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#900000"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#a00000"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#b00000"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#c00000"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#d00000"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#e00000"
+        },
+        {
+          "ch": "\u2588",
+          "fg": "#f00000"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "Bold text (SGR 1)",
+    "input_b64": "XHgxYlsxbUJPTERceDFiWzBt",
+    "grid": [
+      [
+        {
+          "ch": "B",
+          "attrs": [
+            "bold"
+          ]
+        },
+        {
+          "ch": "O",
+          "attrs": [
+            "bold"
+          ]
+        },
+        {
+          "ch": "L",
+          "attrs": [
+            "bold"
+          ]
+        },
+        {
+          "ch": "D",
+          "attrs": [
+            "bold"
+          ]
+        }
+      ]
+    ]
+  },
+  {
+    "name": "Italic text (SGR 3)",
+    "input_b64": "XHgxYlszbUlUQUxJQ1x4MWJbMG0=",
+    "grid": [
+      [
+        {
+          "ch": "I",
+          "attrs": [
+            "italic"
+          ]
+        },
+        {
+          "ch": "T",
+          "attrs": [
+            "italic"
+          ]
+        },
+        {
+          "ch": "A",
+          "attrs": [
+            "italic"
+          ]
+        },
+        {
+          "ch": "L",
+          "attrs": [
+            "italic"
+          ]
+        },
+        {
+          "ch": "I",
+          "attrs": [
+            "italic"
+          ]
+        },
+        {
+          "ch": "C",
+          "attrs": [
+            "italic"
+          ]
+        }
+      ]
+    ]
+  },
+  {
+    "name": "Underline text (SGR 4)",
+    "input_b64": "XHgxYls0bVVOREVSTElORVx4MWJbMG0=",
+    "grid": [
+      [
+        {
+          "ch": "U",
+          "attrs": [
+            "underline"
+          ]
+        },
+        {
+          "ch": "N",
+          "attrs": [
+            "underline"
+          ]
+        },
+        {
+          "ch": "D",
+          "attrs": [
+            "underline"
+          ]
+        },
+        {
+          "ch": "E",
+          "attrs": [
+            "underline"
+          ]
+        },
+        {
+          "ch": "R",
+          "attrs": [
+            "underline"
+          ]
+        },
+        {
+          "ch": "L",
+          "attrs": [
+            "underline"
+          ]
+        },
+        {
+          "ch": "I",
+          "attrs": [
+            "underline"
+          ]
+        },
+        {
+          "ch": "N",
+          "attrs": [
+            "underline"
+          ]
+        },
+        {
+          "ch": "E",
+          "attrs": [
+            "underline"
+          ]
+        }
+      ]
+    ]
+  },
+  {
+    "name": "Strikethrough text (SGR 9)",
+    "input_b64": "XHgxYls5bVNUUklLRVx4MWJbMG0=",
+    "grid": [
+      [
+        {
+          "ch": "S",
+          "attrs": [
+            "strikethrough"
+          ]
+        },
+        {
+          "ch": "T",
+          "attrs": [
+            "strikethrough"
+          ]
+        },
+        {
+          "ch": "R",
+          "attrs": [
+            "strikethrough"
+          ]
+        },
+        {
+          "ch": "I",
+          "attrs": [
+            "strikethrough"
+          ]
+        },
+        {
+          "ch": "K",
+          "attrs": [
+            "strikethrough"
+          ]
+        },
+        {
+          "ch": "E",
+          "attrs": [
+            "strikethrough"
+          ]
+        }
+      ]
+    ]
+  },
+  {
+    "name": "Dim/faint text (SGR 2)",
+    "input_b64": "XHgxYlsybURJTVx4MWJbMG0=",
+    "grid": [
+      [
+        {
+          "ch": "D",
+          "attrs": [
+            "dim"
+          ]
+        },
+        {
+          "ch": "I",
+          "attrs": [
+            "dim"
+          ]
+        },
+        {
+          "ch": "M",
+          "attrs": [
+            "dim"
+          ]
+        }
+      ]
+    ]
+  },
+  {
+    "name": "Inverse text (SGR 7)",
+    "input_b64": "XHgxYls3bUlOVkVSU0VceDFiWzBt",
+    "grid": [
+      [
+        {
+          "ch": "I",
+          "attrs": [
+            "inverse"
+          ]
+        },
+        {
+          "ch": "N",
+          "attrs": [
+            "inverse"
+          ]
+        },
+        {
+          "ch": "V",
+          "attrs": [
+            "inverse"
+          ]
+        },
+        {
+          "ch": "E",
+          "attrs": [
+            "inverse"
+          ]
+        },
+        {
+          "ch": "R",
+          "attrs": [
+            "inverse"
+          ]
+        },
+        {
+          "ch": "S",
+          "attrs": [
+            "inverse"
+          ]
+        },
+        {
+          "ch": "E",
+          "attrs": [
+            "inverse"
+          ]
+        }
+      ]
+    ]
+  },
+  {
+    "name": "Bold + red foreground (SGR 1;31)",
+    "input_b64": "XHgxYlsxOzMxbUJPTEQgUkVEXHgxYlswbQ==",
+    "grid": [
+      [
+        {
+          "ch": "B",
+          "fg": "#cd0000",
+          "attrs": [
+            "bold"
+          ]
+        },
+        {
+          "ch": "O",
+          "fg": "#cd0000",
+          "attrs": [
+            "bold"
+          ]
+        },
+        {
+          "ch": "L",
+          "fg": "#cd0000",
+          "attrs": [
+            "bold"
+          ]
+        },
+        {
+          "ch": "D",
+          "fg": "#cd0000",
+          "attrs": [
+            "bold"
+          ]
+        },
+        {
+          "ch": " ",
+          "fg": "#cd0000",
+          "attrs": [
+            "bold"
+          ]
+        },
+        {
+          "ch": "R",
+          "fg": "#cd0000",
+          "attrs": [
+            "bold"
+          ]
+        },
+        {
+          "ch": "E",
+          "fg": "#cd0000",
+          "attrs": [
+            "bold"
+          ]
+        },
+        {
+          "ch": "D",
+          "fg": "#cd0000",
+          "attrs": [
+            "bold"
+          ]
+        }
+      ]
+    ]
+  },
+  {
+    "name": "Bold does NOT brighten color (SGR 1;31 same hue as 31)",
+    "input_b64": "XHgxYlszMW1SRURceDFiWzBtIFx4MWJbMTszMW1CT0xEXHgxYlswbQ==",
+    "grid": [
+      [
+        {
+          "ch": "R",
+          "fg": "#cd0000"
+        },
+        {
+          "ch": "E",
+          "fg": "#cd0000"
+        },
+        {
+          "ch": "D",
+          "fg": "#cd0000"
+        },
+        {
+          "ch": " "
+        },
+        {
+          "ch": "B",
+          "fg": "#cd0000",
+          "attrs": [
+            "bold"
+          ]
+        },
+        {
+          "ch": "O",
+          "fg": "#cd0000",
+          "attrs": [
+            "bold"
+          ]
+        },
+        {
+          "ch": "L",
+          "fg": "#cd0000",
+          "attrs": [
+            "bold"
+          ]
+        },
+        {
+          "ch": "D",
+          "fg": "#cd0000",
+          "attrs": [
+            "bold"
+          ]
+        }
+      ]
+    ]
+  }
+]

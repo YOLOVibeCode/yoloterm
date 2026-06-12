@@ -1,0 +1,73 @@
+name: Windows Track
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'windows/**'
+      - 'contracts/**'
+      - 'shared/**'
+      - 'spikes/s2-wtcontrol/**'
+      - '.github/workflows/windows-track.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'windows/**'
+      - 'contracts/**'
+      - 'shared/**'
+      - 'spikes/s2-wtcontrol/**'
+      - '.github/workflows/windows-track.yml'
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+      
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.nuget/packages
+            windows/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('windows/**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+      
+      - name: Build Windows track (when exists)
+        if: hashFiles('windows/*.sln') != ''
+        run: |
+          cd windows
+          dotnet restore
+          dotnet build -c Release
+      
+      - name: Run tests (when exists)
+        if: hashFiles('windows/*.sln') != ''
+        run: |
+          cd windows
+          dotnet test -c Release --no-build
+      
+      - name: Build S2 spike
+        run: |
+          cd spikes/s2-wtcontrol
+          dotnet restore
+          dotnet build -c Release
+      
+      - name: Run S2 spike screenshot mode
+        continue-on-error: true
+        run: |
+          cd spikes/s2-wtcontrol
+          dotnet run -c Release -- --screenshot
+      
+      - name: Upload spike screenshot
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: wtcontrol-spike-screenshot
+          path: spikes/s2-wtcontrol/artifacts/*.png

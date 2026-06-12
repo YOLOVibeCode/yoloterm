@@ -1,2 +1,50 @@
+# YOLOTerm multi-track gitignore
 *.code-workspace
 .DS_Store
+
+# macOS / Xcode
+*.xcodeproj/xcuserdata/
+*.xcworkspace/xcuserdata/
+DerivedData/
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+.build/
+*.swiftpm
+
+# Windows / .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+*.userprefs
+packages/
+*.nupkg
+*.snupkg
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Spike artifacts
+spikes/*/artifacts/*.png
+spikes/*/artifacts/*.jpg
+spikes/*/artifacts/screenshots/
+
+# Build outputs
+*.app
+*.exe
+*.dll
+*.pdb
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*~
+
+# Temp / logs
+*.log
+.cursor/

@@ -1,0 +1,20 @@
+{
+  "$schema": "../layout-schema.json",
+  "name": "Four panes in 2x2 grid",
+  "input": {
+    "containerSize": { "width": 800, "height": 600 },
+    "panes": [
+      { "id": "pane-1" },
+      { "id": "pane-2" },
+      { "id": "pane-3" },
+      { "id": "pane-4" }
+    ],
+    "preset": "grid"
+  },
+  "expected": [
+    { "id": "pane-1", "x": 0, "y": 0, "width": 400, "height": 300 },
+    { "id": "pane-2", "x": 400, "y": 0, "width": 400, "height": 300 },
+    { "id": "pane-3", "x": 0, "y": 300, "width": 400, "height": 300 },
+    { "id": "pane-4", "x": 400, "y": 300, "width": 400, "height": 300 }
+  ]
+}

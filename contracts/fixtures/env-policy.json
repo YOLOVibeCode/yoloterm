@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Shell environment policy for YOLOTerm PTY spawning (all tracks)",
+  "set": {
+    "TERM": "xterm-256color",
+    "COLORTERM": "truecolor",
+    "CLICOLOR": "1",
+    "LSCOLORS": "ExGxBxDxCxEgEdxbxgxcxd",
+    "TERM_PROGRAM": "YOLOTerm",
+    "TERM_PROGRAM_VERSION": "<app version placeholder>"
+  },
+  "remove": [
+    "NO_COLOR",
+    "FORCE_COLOR",
+    "CLICOLOR_FORCE"
+  ],
+  "notes": {
+    "TERM": "xterm-256color maximizes SSH compatibility; POSIX-only (informational on Windows)",
+    "COLORTERM": "truecolor signals 24-bit color capability to programs",
+    "CLICOLOR": "Enables color on BSD/macOS tools (ls, etc.)",
+    "LSCOLORS": "macOS ls(1) color scheme (not set on other platforms, user dotfiles handle it)",
+    "TERM_PROGRAM": "Identifies the terminal for conditional logic in shell configs",
+    "remove": [
+      "NO_COLOR/FORCE_COLOR leak from CI/IDE/agent launchers",
+      "Prevents monochrome TUIs even when renderer supports color (TermGrid bug fixed in 444302f)"
+    ],
+    "CLICOLOR_FORCE": "Never set this - corrupts piped output (TermGrid lesson)"
+  }
+}
