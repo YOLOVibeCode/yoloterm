@@ -34,10 +34,13 @@ spikes/*/artifacts/*.jpg
 spikes/*/artifacts/screenshots/
 
 # Build outputs
-*.app
+*.app/
 *.exe
 *.dll
 *.pdb
+
+# Except .NET project directories
+!windows/**/*.App/
 
 # IDE
 .vscode/

@@ -40,34 +40,47 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nuget-
       
-      - name: Build Windows track (when exists)
-        if: hashFiles('windows/*.sln') != ''
+      - name: Restore dependencies
         run: |
           cd windows
-          dotnet restore
-          dotnet build -c Release
+          dotnet restore YOLOTerm.sln
       
-      - name: Run tests (when exists)
-        if: hashFiles('windows/*.sln') != ''
+      - name: Build solution
         run: |
           cd windows
-          dotnet test -c Release --no-build
+          dotnet build YOLOTerm.sln -c Release --no-restore
       
-      - name: Build S2 spike
+      - name: Build pty-probe
         run: |
-          cd spikes/s2-wtcontrol
-          dotnet restore
-          dotnet build -c Release
+          cd windows
+          dotnet build pty-probe/pty-probe.csproj -c Release --no-restore
       
-      - name: Run S2 spike screenshot mode
-        continue-on-error: true
+      - name: Run tests
         run: |
-          cd spikes/s2-wtcontrol
-          dotnet run -c Release -- --screenshot
+          cd windows
+          dotnet test YOLOTerm.Tests/YOLOTerm.Tests.csproj -c Release --no-build --verbosity normal
       
-      - name: Upload spike screenshot
+      - name: Package app
+        if: success()
+        run: |
+          cd windows
+          dotnet publish YOLOTerm.App/YOLOTerm.App.csproj -c Release -o publish/
+      
+      - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: wtcontrol-spike-screenshot
-          path: spikes/s2-wtcontrol/artifacts/*.png
+          name: windows-build
+          path: |
+            windows/publish/
+            windows/pty-probe/bin/Release/net9.0/
+      
+      - name: Build S2 spike (if exists)
+        continue-on-error: true
+        run: |
+          if (Test-Path spikes/s2-wtcontrol/*.csproj) {
+            cd spikes/s2-wtcontrol
+            dotnet restore
+            dotnet build -c Release
+          }
+
