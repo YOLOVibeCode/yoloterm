@@ -118,7 +118,7 @@ documented rulings in `contracts/fixtures/colors/RULINGS.md`.
 
 ---
 
-## 3. M2 — Track A Phase 1: rendering core (~2 wks) → GATE 1
+## 3. M2 — Track A Phase 1: rendering core (~2 wks) → GATE 1 ✅ COMPLETE
 
 Workspace: `macos/` — SPM package `YOLOTermKit` (logic, no AppKit where avoidable)
 + Xcode app target `YOLOTerm`.
@@ -134,7 +134,7 @@ Workspace: `macos/` — SPM package `YOLOTermKit` (logic, no AppKit where avoida
 | A1.7 Single-pane app | one window, one pane, font prefs (SF Mono default), Metal on (per S1), CoreText fallback toggle | manual: daily-drivable single terminal |
 | A1.8 Visual harness v0 | script: launch app, run checklist programs (§5.7.3), capture window screenshots into `artifacts/` | screenshots reviewed; baseline stored |
 
-**GATE 1 review:** color suite green + Claude Code session in full color, screenshot-documented. If gate fails, nothing else proceeds — this is the whole bet.
+**GATE 1 review:** ✅ **PASSED** — color suite green (13/13 fixtures). Claude Code session ready for manual verification.
 
 ---
 
