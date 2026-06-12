@@ -11,6 +11,6 @@
 
   <ItemGroup>
     <!-- EasyWindowsTerminalControl wraps the Windows Terminal WPF control -->
-    <PackageReference Include="EasyWindowsTerminalControl" Version="0.1.2" />
+    <PackageReference Include="EasyWindowsTerminalControl" Version="1.0.*" />
   </ItemGroup>
 </Project>

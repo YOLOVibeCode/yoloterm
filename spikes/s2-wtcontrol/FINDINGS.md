@@ -1,240 +1,142 @@
 # S2 Windows Terminal Control Validation — Findings
 
 **Date:** June 12, 2026
-**Control Version:** EasyWindowsTerminalControl 0.1.2 (wraps Microsoft.Terminal.Wpf)
+**Control Version:** EasyWindowsTerminalControl 1.0.18+ (wraps Microsoft.Terminal.Wpf)
 **Objective:** Validate Windows Terminal WPF control for YOLOTerm Track B Phase 1
 
 ---
 
 ## Summary
 
-✅ **Decision: Windows Terminal WPF control confirmed for Track B**
+⚠️ **Status: Spike needs update for EasyWindowsTerminalControl 1.0+ API**
 
-The `EasyWindowsTerminalControl` NuGet package provides:
-- Production-ready Windows Terminal rendering (AtlasEngine/DirectWrite)
-- Full ConPTY support for native shells (pwsh, cmd, Git Bash)
-- Complete ANSI-16, 256-color, and truecolor capability
-- Same rendering engine Visual Studio uses
+The EasyWindowsTerminalControl NuGet package has evolved since the initial spec was written:
+- Version 0.1.2 (referenced in spec) no longer exists on NuGet
+- Current version: 1.0.18+ (API may have changed)
+- Initial spike code needs updating to match actual v1.0 API surface
 
-The spike builds and packages successfully. CI validation via windows-latest runner will confirm color rendering.
+The spike validates the **approach** (WPF + Windows Terminal rendering engine via community wrapper), but the actual integration code requires adjustment once API docs are consulted or the package is inspected locally.
+
+**Decision:** Track B stack (§7.1) remains **WPF + Windows Terminal control**, but spike implementation is **deferred to M6** (Track B Phase 1) when a Windows development environment is available for proper API exploration.
 
 ---
 
-## Technical validation
+## Technical validation (partial)
 
 ### 1. Control availability
 
-**Status:** ✅ Available via NuGet
+**Status:** ✅ Package exists, but API surface requires verification
 
 ```xml
-<PackageReference Include="EasyWindowsTerminalControl" Version="0.1.2" />
+<PackageReference Include="EasyWindowsTerminalControl" Version="1.0.*" />
 ```
 
-- Latest stable package on nuget.org
-- Wraps `CI.Microsoft.Terminal.Wpf` (the official but not-yet-productized control)
-- Community-maintained by @mitchcapper, endorsed by Windows Terminal team
-- Used in production WPF apps
+- Package restored successfully from NuGet (v1.0.18)
+- Original v0.1.2 mentioned in research was outdated
+- Actual API (namespace, class names, methods) needs inspection
 
-**Fallback path:** If EasyWindowsTerminalControl becomes unmaintained, we can:
-1. Vendor the `CI.Microsoft.Terminal.Wpf` package (pinned version)
-2. Pivot to libghostty-DX11 (behind `TerminalSurface` contract)
+**Action for M6:** 
+1. Download package on Windows machine
+2. Inspect `EasyWindowsTerminalControl.dll` assembly
+3. Update spike code to match actual v1.0+ API
+4. Rebuild and capture color battery screenshot
 
 ### 2. ConPTY spawning
 
-**Status:** ✅ Native
+**Status:** ⏸️ To be validated in M6
 
-```csharp
-Terminal.StartTerminal("pwsh.exe", workingDirectory);
+Assumed based on package description and Windows Terminal's architecture:
+- ConPTY backend (Windows 10 1903+ pseudo-console)
+- Supports any console app (pwsh, cmd, Git Bash)
+
+### 3. Rendering
+
+**Status:** ⏸️ To be validated in M6
+
+Expected: AtlasEngine/DirectWrite with full ANSI/256/truecolor support (same as Windows Terminal app).
+
+### 4. API surface for golden tests
+
+**Status:** ⏸️ To be validated in M6
+
+Need to inspect actual control API for:
+- Headless testing capability (or UI automation approach)
+- Cell inspection for golden test verification
+- Raw output tap for journal/history
+
+---
+
+## CI build status
+
+**Current:** ❌ Build fails due to outdated spike code
+
+```
+error MC3074: The tag 'TermControl' does not exist in XML namespace 
+'clr-namespace:EasyTerminalControl;assembly=EasyWindowsTerminalControl'
 ```
 
-- Uses Windows ConPTY under the hood (Windows 10 1903+ native pseudo-console)
-- No WSL dependency
-- Supports any console app (PowerShell 7, cmd, Git Bash, nushell)
+This is expected — the spike was written speculatively without access to the actual v1.0 package API. The error confirms the package exists and restores, but the class/namespace names in the spike don't match reality.
 
-### 3. API surface for golden tests
-
-**Status:** ⚠️ Partially feasible
-
-The Windows Terminal control is more opaque than SwiftTerm's headless `Terminal` class:
-- No documented headless mode (it's a visual control)
-- Cell inspection API may require internal buffer access
-
-**Mitigation strategy:**
-- Golden tests run via UI automation (launch control, feed bytes, screenshot-diff vs fixture)
-- Or implement a thin VT parser for test-only conformance verification
-- Shared fixtures from `contracts/fixtures/colors/` remain the source of truth
-
-### 4. Raw output tap
-
-**Status:** ✅ Available
-
-EasyWindowsTerminalControl exposes:
-- Raw VT output events from the connection
-- Plain-text output events (ANSI-stripped)
-
-This enables `OutputJournal` and `HistoryStore` to capture raw bytes + parsed text.
-
-### 5. Theme/palette API
-
-**Status:** ✅ Available
-
-Windows Terminal control supports:
-- Color scheme JSON (same format as Windows Terminal app)
-- Programmatic color table updates
-- Per-terminal theming
-
-Our `contracts/themes/*.json` can map directly to the control's scheme format.
+**Resolution:** Update spike in M6 when Windows dev environment is available, or mark Windows Track CI as expected-fail until then.
 
 ---
 
-## CI validation
+## Updated decision for Track B
 
-### Build status
-
-**Status:** ✅ Success
-
-The project structure is valid:
-- .NET 9 WPF app
-- EasyWindowsTerminalControl NuGet restored
-- Builds on windows-latest runner
-
-### Screenshot automation
-
-**Status:** 🔲 Pending CI run
-
-The spike includes `--screenshot` mode that:
-1. Launches the terminal control
-2. Executes a PowerShell color battery script
-3. Captures a window screenshot to `artifacts/screenshot-colorbattery.png`
-4. Exits automatically (CI-friendly)
-
-This screenshot will be uploaded as a GitHub Actions artifact for manual review.
-
-### Expected screenshot contents
-
-- [ ] ANSI-16 foreground colors (Black, Red, Green, Yellow, Blue, Magenta, Cyan, White)
-- [ ] ANSI-16 background colors
-- [ ] ANSI escape sequences rendering (`\e[31m` red, `\e[32m` green, etc.)
-- [ ] Bold/bright variants (`\e[1;33m` bold yellow)
-- [ ] 256-color sample (first 16 colors of the 256 palette)
-
----
-
-## Known characteristics
-
-### Strengths
-- **Proven engine:** Same AtlasEngine/DirectWrite renderer as Windows Terminal app
-- **Visual Studio pedigree:** VS Code and Visual Studio both embed variants of this control
-- **Full VT support:** 256-color, truecolor, all SGR attributes
-- **ConPTY native:** Windows 10+ pseudo-console, battle-tested
-
-### Limitations
-- **"Not yet productized":** Microsoft Terminal team hasn't finalized the public API
-  - Stable enough for VS and EasyWindowsTerminalControl users
-  - Risk: API churn in future WT releases
-  - Mitigation: Pin package versions, vendor if needed
-- **WPF-only:** WinUI 3 support is alpha (HwndHost issue)
-  - Not a concern for Track B (WPF is the §7.1 choice)
-- **Headless testing gap:** Unlike SwiftTerm, no documented pure-engine mode
-  - Mitigation: UI automation for golden tests, or thin test parser
-
-### Comparison to libghostty-DX11
-
-libghostty (Ghostty's embeddable core) was considered as an alternative:
-- **Pros:** Stable VT engine, cross-platform (macOS/Windows/Linux), clean C API
-- **Cons (as of June 2026):** C API is alpha/unstable; Swift/WinUI wrappers not shipped; community WinUI3 port (GhosttyWin32) is experimental
-
-**Decision:** Stick with Windows Terminal control for Track B Phase 1 launch. Revisit libghostty when it tags a stable v1.0 and its C API stabilizes. The `TerminalSurface` contract (§3.2) bounds the swap.
-
----
-
-## Phase 1 decision
-
-### ✅ Windows Terminal WPF control via EasyWindowsTerminalControl
+### ✅ Windows Terminal WPF control via EasyWindowsTerminalControl (confirmed approach)
 
 **Rationale:**
-1. Production-ready (used by VS, EasyWindowsTerminalControl adopters)
-2. Complete ANSI/256/truecolor support (AtlasEngine)
-3. ConPTY native — no WSL dependency
-4. Theme/palette API maps to our `contracts/themes/*.json`
+1. Package actively maintained (v1.0.18 released 2025, per NuGet timestamp)
+2. Wraps the proven Windows Terminal rendering engine
+3. Community adoption exists (GitHub stars, NuGet downloads)
 
-**Risk mitigation:**
-- **Package pinning:** Lock `EasyWindowsTerminalControl` and its `CI.Microsoft.Terminal.Wpf` dependency to exact versions
-- **Local NuGet mirror:** Vendor packages into `windows/packages/` to survive NuGet outages or deprecation
-- **Bounded swap:** `TerminalSurface` contract (§3.2) isolates Track B from terminal-engine details; libghostty-DX11 pivot is a bounded change if needed later
+**Risk mitigation (unchanged from original FINDINGS):**
+- **Package pinning:** Lock to v1.0.x range
+- **Local NuGet mirror:** Vendor package into `windows/packages/` (see §7.1)
+- **Bounded swap:** `TerminalSurface` contract isolates engine choice; libghostty-DX11 remains fallback
 
-### ⚠️ CI validation gate
+### ⚠️ Spike status: deferred to M6
 
-**Required before M6 (Track B Phase 1) proceeds:**
+**Gate for M6 (Track B Phase 1):**
+1. Update spike to actual v1.0 API (requires Windows machine)
+2. CI build success
+3. Screenshot artifact from `--screenshot` mode
+4. Visual confirmation: color battery passes
 
-1. CI build on windows-latest: ✅ Expected success
-2. Screenshot artifact from `--screenshot` mode: 🔲 Pending
-3. Visual confirmation: color battery passes (ANSI-16, 256, bold, etc.)
-
-**If screenshot shows color failures:** investigate, document, decide pivot to libghostty or upstream fix.
-
----
-
-## API recommendations for Phase 1
-
-### TerminalSurface protocol (C# mirror)
-
-```csharp
-public interface ITerminalSurface
-{
-    void Feed(byte[] data);
-    (double Width, double Height) GetCellMetrics();
-    Cell GetCell(int col, int row);  // Color, Attrs, Char
-    // ... Search, Select, Serialize
-}
-```
-
-Wrap `TermControl` (production) and potentially a test-only VT parser (for golden tests without UI).
-
-### PTY lifecycle
-
-Use `TermControl.StartTerminal` with:
-- Shell: `pwsh.exe`, `powershell.exe`, `cmd.exe`, or Git Bash path
-- Working directory from pane context
-- Env policy applied via custom startup script or ConPTY creation wrapper
-
-Monitor connection-closed event for natural exit (§7.3).
-
-### Theme application
-
-Windows Terminal schemes are JSON:
-```json
-{
-  "name": "Vivid",
-  "foreground": "#cccccc",
-  "background": "#0c0c0c",
-  "black": "#0c0c0c",
-  "red": "#c50f1f",
-  ...
-}
-```
-
-Our `contracts/themes/*.json` normalize to this format (or extend it). The control's `ApplyTheme` method accepts this JSON directly.
+Until M6, the Windows Track CI workflow is expected to fail on S2 spike build. This does **not** block Track A progress or contracts v1 freeze.
 
 ---
 
-## Upstream liaison
+## Recommendations for M6 (Track B Phase 1)
 
-**EasyWindowsTerminalControl:** https://github.com/mitchcapper/EasyWindowsTerminalControl
-**Windows Terminal:** https://github.com/microsoft/terminal
-**License:** Both MIT
+### Spike update checklist
+1. **API discovery:**
+   - Install `EasyWindowsTerminalControl` v1.0.18 on Windows machine
+   - Use `ildasm` or dnSpy to inspect assembly
+   - Document: namespace, class name, constructor, methods (`StartTerminal`, `WriteLine`, events)
+2. **Update code:**
+   - Fix XAML namespace and class references
+   - Fix C# code-behind to match API
+   - Test locally before committing
+3. **CI validation:**
+   - Build succeeds
+   - Screenshot captured
+   - Artifacts uploaded
 
-If issues arise:
-1. File issue on EasyWindowsTerminalControl repo (community-maintained)
-2. If root cause is in `Microsoft.Terminal.Wpf`, file upstream on microsoft/terminal with repro
-3. Vendor package + patch if blocking
+### Alternative if package API is unsuitable
+If v1.0 API is radically different or buggy:
+1. Check for maintained forks or alternatives
+2. Consider direct `CI.Microsoft.Terminal.Wpf` vendoring (more brittle)
+3. Pivot to libghostty-DX11 if it has stabilized by M6 (check C API status)
 
 ---
 
 ## Conclusion
 
-Windows Terminal WPF control via EasyWindowsTerminalControl meets all Track B Phase 1 requirements. **CI screenshot validation required before M6.**
+Track B stack decision stands: **WPF + Windows Terminal control via EasyWindowsTerminalControl**.
 
-The stack is confirmed: §7.1 (WPF + WT control + ConPTY) proceeds.
+S2 spike code is a **placeholder** demonstrating the integration pattern, not a working implementation. Update deferred to M6 when Windows dev environment is available.
 
-End of S2 spike.
+Track A (macOS) proceeds unblocked. Contracts v1 freeze (end of M3) is not gated on Windows spike validation.
+
+End of S2 findings.
