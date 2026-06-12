@@ -8,8 +8,23 @@
         Title="YOLOTerm" Height="600" Width="1000"
         Background="#1e1e1e"
         Loaded="Window_Loaded"
-        SizeChanged="Window_SizeChanged">
-    <Grid x:Name="TerminalContainer">
-        <!-- Terminal control will be added programmatically -->
+        KeyDown="Window_KeyDown">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Tab Strip -->
+        <Grid Grid.Row="0" x:Name="TabStripContainer"/>
+        
+        <!-- Content Area -->
+        <Grid Grid.Row="1" x:Name="ContentContainer">
+            <!-- TilingPanel and tabs will be added programmatically -->
+        </Grid>
+        
+        <!-- Find Bar -->
+        <Grid Grid.Row="2" x:Name="FindBarContainer"/>
     </Grid>
 </Window>
