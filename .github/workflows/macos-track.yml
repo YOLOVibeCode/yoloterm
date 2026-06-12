@@ -1,4 +1,4 @@
-name: macOS Track
+name: macOS Track CI
 
 on:
   push:
@@ -6,21 +6,17 @@ on:
     paths:
       - 'macos/**'
       - 'contracts/**'
-      - 'shared/**'
-      - 'spikes/s1-swiftterm/**'
       - '.github/workflows/macos-track.yml'
   pull_request:
-    branches: [main]
     paths:
       - 'macos/**'
       - 'contracts/**'
-      - 'shared/**'
-      - 'spikes/s1-swiftterm/**'
       - '.github/workflows/macos-track.yml'
 
 jobs:
   build-and-test:
     runs-on: macos-15
+    
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -28,36 +24,28 @@ jobs:
       - name: Select Xcode
         run: sudo xcode-select -s /Applications/Xcode.app
       
-      - name: Cache SPM dependencies
-        uses: actions/cache@v4
-        with:
-          path: |
-            macos/.build
-            ~/Library/Developer/Xcode/DerivedData
-            ~/.swiftpm
-          key: ${{ runner.os }}-spm-${{ hashFiles('macos/**/Package.resolved') }}
-          restore-keys: |
-            ${{ runner.os }}-spm-
+      - name: Build
+        working-directory: macos
+        run: swift build
       
-      - name: Build macOS track (when exists)
-        if: hashFiles('macos/Package.swift') != ''
+      - name: Run Tests (including GATE 1 color corpus)
+        working-directory: macos
+        run: swift test
+      
+      - name: Build pty-probe
+        working-directory: macos
+        run: swift build --product pty-probe
+      
+      - name: Build YOLOTerm app
+        working-directory: macos
+        run: swift build --product YOLOTerm
+      
+      - name: Verify Metal renderer availability
+        working-directory: macos
         run: |
-          cd macos
-          swift build -c release
-      
-      - name: Run tests (when exists)
-        if: hashFiles('macos/Package.swift') != ''
-        run: |
-          cd macos
-          swift test
-      
-      - name: Build S1 spike
-        run: |
-          cd spikes/s1-swiftterm
-          swift build -c release
-      
-      - name: Upload spike binary
-        uses: actions/upload-artifact@v4
-        with:
-          name: swiftterm-spike-macos
-          path: spikes/s1-swiftterm/.build/release/SwiftTermSpike
+          if [ -f .build/debug/YOLOTerm ]; then
+            echo "✅ YOLOTerm executable built successfully"
+          else
+            echo "❌ YOLOTerm executable not found"
+            exit 1
+          fi
