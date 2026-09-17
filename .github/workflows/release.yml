@@ -1,0 +1,229 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g., 0.1.0)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: macos-15
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '16.0'
+      
+      - name: Install dependencies
+        run: |
+          brew install create-dmg
+      
+      - name: Determine version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+          else
+            VERSION="${GITHUB_REF#refs/tags/v}"
+          fi
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "Building version: $VERSION"
+      
+      - name: Build Release
+        working-directory: macos
+        run: |
+          swift build -c release --arch arm64 --arch x86_64
+          
+          # Create app bundle structure
+          mkdir -p build/Release/YOLOTerm.app/Contents/MacOS
+          mkdir -p build/Release/YOLOTerm.app/Contents/Resources
+          
+          # Copy binary
+          cp .build/release/YOLOTerm build/Release/YOLOTerm.app/Contents/MacOS/
+          
+          # Copy Info.plist
+          cp YOLOTermApp/Info.plist build/Release/YOLOTerm.app/Contents/
+          
+          # Update version in Info.plist
+          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString ${{ steps.version.outputs.VERSION }}" build/Release/YOLOTerm.app/Contents/Info.plist
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${{ github.run_number }}" build/Release/YOLOTerm.app/Contents/Info.plist
+      
+      - name: Run tests
+        working-directory: macos
+        run: |
+          swift test
+      
+      # NOTE: The following steps require credentials that must be configured by the user
+      # See RELEASE.md for detailed setup instructions
+      
+      - name: Code sign (if credentials available)
+        if: ${{ secrets.MACOS_CERTIFICATE != '' }}
+        working-directory: macos
+        env:
+          MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
+          MACOS_CERTIFICATE_PWD: ${{ secrets.MACOS_CERTIFICATE_PWD }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: |
+          # Decode certificate
+          echo $MACOS_CERTIFICATE | base64 --decode > certificate.p12
+          
+          # Create temporary keychain
+          security create-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
+          
+          # Import certificate
+          security import certificate.p12 -k build.keychain -P "$MACOS_CERTIFICATE_PWD" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" build.keychain
+          
+          # Sign application
+          codesign --force --sign "Developer ID Application" --options runtime --deep build/Release/YOLOTerm.app
+          
+          # Verify signature
+          codesign --verify --verbose build/Release/YOLOTerm.app
+          
+          # Clean up
+          rm certificate.p12
+      
+      - name: Notarize (if credentials available)
+        if: ${{ secrets.NOTARIZATION_APPLE_ID != '' }}
+        working-directory: macos
+        env:
+          NOTARIZATION_APPLE_ID: ${{ secrets.NOTARIZATION_APPLE_ID }}
+          NOTARIZATION_TEAM_ID: ${{ secrets.NOTARIZATION_TEAM_ID }}
+          NOTARIZATION_PASSWORD: ${{ secrets.NOTARIZATION_PASSWORD }}
+        run: |
+          # Create archive for notarization
+          ditto -c -k --keepParent build/Release/YOLOTerm.app build/YOLOTerm.zip
+          
+          # Submit for notarization
+          xcrun notarytool submit build/YOLOTerm.zip \
+            --apple-id "$NOTARIZATION_APPLE_ID" \
+            --team-id "$NOTARIZATION_TEAM_ID" \
+            --password "$NOTARIZATION_PASSWORD" \
+            --wait
+          
+          # Staple notarization ticket
+          xcrun stapler staple build/Release/YOLOTerm.app
+          
+          # Verify stapling
+          xcrun stapler validate build/Release/YOLOTerm.app
+      
+      - name: Create DMG
+        working-directory: macos
+        run: |
+          create-dmg \
+            --volname "YOLOTerm" \
+            --volicon "build/Release/YOLOTerm.app/Contents/Resources/AppIcon.icns" \
+            --window-pos 200 120 \
+            --window-size 800 400 \
+            --icon-size 100 \
+            --icon "YOLOTerm.app" 200 190 \
+            --hide-extension "YOLOTerm.app" \
+            --app-drop-link 600 185 \
+            "build/YOLOTerm-${{ steps.version.outputs.VERSION }}.dmg" \
+            "build/Release/YOLOTerm.app" || true
+          
+          # create-dmg returns non-zero even on success due to device busy warning
+          # Check if DMG was actually created
+          if [ ! -f "build/YOLOTerm-${{ steps.version.outputs.VERSION }}.dmg" ]; then
+            echo "DMG creation failed"
+            exit 1
+          fi
+      
+      - name: Generate Sparkle appcast (if key available)
+        if: ${{ secrets.SPARKLE_PRIVATE_KEY != '' }}
+        working-directory: macos
+        env:
+          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+        run: |
+          # Install Sparkle tools
+          brew install sparkle
+          
+          # Generate EdDSA signature
+          SIGNATURE=$(echo "$SPARKLE_PRIVATE_KEY" | \
+            /opt/homebrew/bin/sign_update "build/YOLOTerm-${{ steps.version.outputs.VERSION }}.dmg")
+          
+          # Create appcast entry
+          cat > build/appcast-entry.xml << EOF
+          <item>
+            <title>Version ${{ steps.version.outputs.VERSION }}</title>
+            <sparkle:version>${{ steps.version.outputs.VERSION }}</sparkle:version>
+            <sparkle:releaseNotesLink>https://github.com/${{ github.repository }}/releases/tag/v${{ steps.version.outputs.VERSION }}</sparkle:releaseNotesLink>
+            <pubDate>$(date -R)</pubDate>
+            <enclosure
+              url="https://github.com/${{ github.repository }}/releases/download/v${{ steps.version.outputs.VERSION }}/YOLOTerm-${{ steps.version.outputs.VERSION }}.dmg"
+              sparkle:version="${{ steps.version.outputs.VERSION }}"
+              sparkle:edSignature="$SIGNATURE"
+              length="$(stat -f%z "build/YOLOTerm-${{ steps.version.outputs.VERSION }}.dmg")"
+              type="application/octet-stream" />
+          </item>
+          EOF
+          
+          echo "Appcast entry generated:"
+          cat build/appcast-entry.xml
+      
+      - name: Create checksums
+        working-directory: macos
+        run: |
+          cd build
+          shasum -a 256 "YOLOTerm-${{ steps.version.outputs.VERSION }}.dmg" > "YOLOTerm-${{ steps.version.outputs.VERSION }}.dmg.sha256"
+      
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.version.outputs.VERSION }}
+          name: YOLOTerm v${{ steps.version.outputs.VERSION }}
+          draft: true
+          prerelease: false
+          body: |
+            ## YOLOTerm v${{ steps.version.outputs.VERSION }}
+            
+            ### Installation
+            
+            1. Download `YOLOTerm-${{ steps.version.outputs.VERSION }}.dmg`
+            2. Open the DMG and drag YOLOTerm to Applications
+            3. Launch YOLOTerm from Applications
+            
+            ### Changes
+            
+            See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for details.
+            
+            ### System Requirements
+            
+            - macOS 14.0 or later
+            - Apple Silicon or Intel processor
+            
+            ### Verification
+            
+            SHA-256 checksums are provided for verification.
+          files: |
+            macos/build/YOLOTerm-${{ steps.version.outputs.VERSION }}.dmg
+            macos/build/YOLOTerm-${{ steps.version.outputs.VERSION }}.dmg.sha256
+            macos/build/appcast-entry.xml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: YOLOTerm-${{ steps.version.outputs.VERSION }}
+          path: |
+            macos/build/YOLOTerm-${{ steps.version.outputs.VERSION }}.dmg
+            macos/build/YOLOTerm-${{ steps.version.outputs.VERSION }}.dmg.sha256
+            macos/build/appcast-entry.xml

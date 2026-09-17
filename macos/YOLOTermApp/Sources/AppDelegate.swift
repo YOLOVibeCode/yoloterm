@@ -146,10 +146,25 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     private var tabControllers: [NSWindow: TabController] = [:]
     private var env: [String: String] = [:]
     private var shell: String = "/bin/zsh"
+    private var recentDirectories: [String] = []
+    private let maxRecentDirectories = 10
+    
+    func applicationWillFinishLaunching(_ notification: Notification) {
+        // Register URL handler
+        NSAppleEventManager.shared().setEventHandler(
+            self,
+            andSelector: #selector(handleGetURLEvent(_:withReplyEvent:)),
+            forEventClass: AEEventClass(kInternetEventClass),
+            andEventID: AEEventID(kAEGetURL)
+        )
+    }
     
     func applicationDidFinishLaunching(_ notification: Notification) {
         // Setup environment
         setupEnvironment()
+        
+        // Load recent directories
+        loadRecentDirectories()
         
         // Create first window with first tab
         createNewWindow()
@@ -167,6 +182,156 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
         return true
+    }
+    
+    func applicationDockMenu(_ sender: NSApplication) -> NSMenu? {
+        let dockMenu = NSMenu()
+        dockMenu.addItem(withTitle: "New Window", action: #selector(newWindowFromDock(_:)), keyEquivalent: "")
+        
+        if !recentDirectories.isEmpty {
+            dockMenu.addItem(NSMenuItem.separator())
+            let recentItem = NSMenuItem(title: "Recent Directories", action: nil, keyEquivalent: "")
+            let recentSubmenu = NSMenu()
+            
+            for directory in recentDirectories {
+                let item = NSMenuItem(
+                    title: (directory as NSString).lastPathComponent,
+                    action: #selector(openRecentDirectory(_:)),
+                    keyEquivalent: ""
+                )
+                item.representedObject = directory
+                recentSubmenu.addItem(item)
+            }
+            
+            recentItem.submenu = recentSubmenu
+            dockMenu.addItem(recentItem)
+        }
+        
+        return dockMenu
+    }
+    
+    // MARK: - URL Handler
+    
+    @MainActor
+    @objc func handleGetURLEvent(_ event: NSAppleEventDescriptor, withReplyEvent: NSAppleEventDescriptor) {
+        guard let urlString = event.paramDescriptor(forKeyword: AEKeyword(keyDirectObject))?.stringValue,
+              let url = URL(string: urlString) else {
+            return
+        }
+        
+        handleYOLOTermURL(url)
+    }
+    
+    @MainActor
+    private func handleYOLOTermURL(_ url: URL) {
+        guard url.scheme == "yoloterm" else { return }
+        
+        if url.host == "open" {
+            // Parse query parameters
+            guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+                  let queryItems = components.queryItems else {
+                return
+            }
+            
+            var directory: String?
+            for item in queryItems {
+                if item.name == "dir" {
+                    directory = item.value
+                }
+            }
+            
+            if let dir = directory, FileManager.default.fileExists(atPath: dir) {
+                openNewTabAtDirectory(dir)
+            }
+        }
+    }
+    
+    // MARK: - Finder Service
+    
+    @MainActor
+    @objc func openTerminalAtPath(_ pboard: NSPasteboard, userData: String, error: AutoreleasingUnsafeMutablePointer<NSString>) {
+        guard let paths = pboard.propertyList(forType: NSPasteboard.PasteboardType(rawValue: "NSFilenamesPboardType")) as? [String],
+              let path = paths.first else {
+            return
+        }
+        
+        openNewTabAtDirectory(path)
+    }
+    
+    // MARK: - Recent Directories
+    
+    private func loadRecentDirectories() {
+        if let saved = UserDefaults.standard.stringArray(forKey: "RecentDirectories") {
+            recentDirectories = saved
+        }
+    }
+    
+    private func saveRecentDirectories() {
+        UserDefaults.standard.set(recentDirectories, forKey: "RecentDirectories")
+    }
+    
+    private func addRecentDirectory(_ path: String) {
+        // Remove if already exists
+        recentDirectories.removeAll { $0 == path }
+        
+        // Add to front
+        recentDirectories.insert(path, at: 0)
+        
+        // Limit size
+        if recentDirectories.count > maxRecentDirectories {
+            recentDirectories.removeLast()
+        }
+        
+        saveRecentDirectories()
+    }
+    
+    @MainActor
+    @objc private func openRecentDirectory(_ sender: NSMenuItem) {
+        guard let directory = sender.representedObject as? String else { return }
+        openNewTabAtDirectory(directory)
+    }
+    
+    @MainActor
+    @objc private func newWindowFromDock(_ sender: Any?) {
+        createNewWindow()
+    }
+    
+    @MainActor
+    private func openNewTabAtDirectory(_ directory: String) {
+        // Add to recent directories
+        addRecentDirectory(directory)
+        
+        // Get or create window
+        let targetWindow: NSWindow
+        if let keyWindow = NSApp.keyWindow, tabControllers[keyWindow] != nil {
+            targetWindow = keyWindow
+        } else if let firstWindow = NSApp.windows.first, tabControllers[firstWindow] != nil {
+            targetWindow = firstWindow
+        } else {
+            // Create new window
+            createNewWindow()
+            guard let newWindow = NSApp.keyWindow else { return }
+            targetWindow = newWindow
+        }
+        
+        // Create new tab in the target window
+        let newWindow = NSWindow(
+            contentRect: targetWindow.frame,
+            styleMask: [.titled, .closable, .miniaturizable, .resizable],
+            backing: .buffered,
+            defer: false
+        )
+        newWindow.delegate = self
+        newWindow.tabbingMode = .preferred
+        
+        // Create tab controller with specified directory
+        let tabId = "tab-\(UUID().uuidString)"
+        let tabController = TabController(tabId: tabId, shell: shell, cwd: directory, env: env)
+        tabControllers[newWindow] = tabController
+        
+        newWindow.contentView = tabController.tilingView
+        targetWindow.addTabbedWindow(newWindow, ordered: .above)
+        newWindow.makeKeyAndOrderFront(nil)
     }
     
     // MARK: - Window Management

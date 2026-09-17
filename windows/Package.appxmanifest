@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  IgnorableNamespaces="uap uap3 rescap">
+
+  <Identity
+    Name="YOLOVibeCode.YOLOTerm"
+    Publisher="CN=YOLOVibeCode"
+    Version="0.1.0.0" />
+
+  <Properties>
+    <DisplayName>YOLOTerm</DisplayName>
+    <PublisherDisplayName>YOLOVibeCode</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+    <Description>A modern terminal emulator with multi-pane tiling, command history, and session persistence.</Description>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.19041.0" MaxVersionTested="10.0.22631.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="en-us" />
+  </Resources>
+
+  <Applications>
+    <Application Id="YOLOTerm" Executable="YOLOTerm.exe" EntryPoint="Windows.FullTrustApplication">
+      <uap:VisualElements
+        DisplayName="YOLOTerm"
+        Description="Modern terminal emulator with multi-pane tiling"
+        BackgroundColor="transparent"
+        Square150x150Logo="Assets\Square150x150Logo.png"
+        Square44x44Logo="Assets\Square44x44Logo.png">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" />
+        <uap:SplashScreen Image="Assets\SplashScreen.png" />
+      </uap:VisualElements>
+      
+      <Extensions>
+        <!-- Protocol handler for yoloterm:// URLs -->
+        <uap:Extension Category="windows.protocol">
+          <uap:Protocol Name="yoloterm">
+            <uap:DisplayName>YOLOTerm Protocol</uap:DisplayName>
+          </uap:Protocol>
+        </uap:Extension>
+        
+        <!-- File type associations (optional - for theme imports) -->
+        <uap3:Extension Category="windows.fileTypeAssociation">
+          <uap3:FileTypeAssociation Name="itermcolors">
+            <uap:DisplayName>iTerm2 Color Scheme</uap:DisplayName>
+            <uap:SupportedFileTypes>
+              <uap:FileType>.itermcolors</uap:FileType>
+            </uap:SupportedFileTypes>
+          </uap3:FileTypeAssociation>
+        </uap3:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <rescap:Capability Name="runFullTrust" />
+  </Capabilities>
+</Package>

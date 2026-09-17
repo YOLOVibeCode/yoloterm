@@ -1,0 +1,49 @@
+# YOLOTerm Winget Package Manifest
+# Submit to: https://github.com/microsoft/winget-pkgs
+
+PackageIdentifier: YOLOVibeCode.YOLOTerm
+PackageVersion: 0.1.0
+PackageName: YOLOTerm
+Publisher: YOLOVibeCode
+License: MIT
+LicenseUrl: https://github.com/yolovibecode/yoloterm/blob/main/LICENSE
+ShortDescription: A modern terminal emulator with multi-pane tiling, command history, and session persistence.
+Description: |-
+  YOLOTerm is a modern terminal emulator for Windows featuring:
+  - Multi-pane tiling with flexible layouts
+  - Full truecolor (24-bit) support
+  - Session persistence and workspace restoration
+  - Command history with full-text search
+  - Shell integration (PowerShell, Git Bash)
+  - Theme support (Windows Terminal, iTerm2, Ghostty)
+  - Windows 11-style native tabs
+Tags:
+  - terminal
+  - emulator
+  - console
+  - shell
+  - powershell
+  - command-line
+Homepage: https://github.com/yolovibecode/yoloterm
+PackageUrl: https://github.com/yolovibecode/yoloterm/releases
+Moniker: yoloterm
+
+Installers:
+  - Architecture: x64
+    InstallerType: msix
+    InstallerUrl: https://github.com/yolovibecode/yoloterm/releases/download/v0.1.0/YOLOTerm-0.1.0-x64.msix
+    InstallerSha256: [REPLACE_WITH_SHA256]
+    SignatureSha256: [REPLACE_WITH_SIGNATURE_SHA256]
+    PackageFamilyName: YOLOVibeCode.YOLOTerm_8wekyb3d8bbwe
+    MinimumOSVersion: 10.0.19041.0
+
+  - Architecture: arm64
+    InstallerType: msix
+    InstallerUrl: https://github.com/yolovibecode/yoloterm/releases/download/v0.1.0/YOLOTerm-0.1.0-arm64.msix
+    InstallerSha256: [REPLACE_WITH_SHA256]
+    SignatureSha256: [REPLACE_WITH_SIGNATURE_SHA256]
+    PackageFamilyName: YOLOVibeCode.YOLOTerm_8wekyb3d8bbwe
+    MinimumOSVersion: 10.0.19041.0
+
+ManifestType: singleton
+ManifestVersion: 1.5.0

@@ -49,3 +49,19 @@ jobs:
             echo "❌ YOLOTerm executable not found"
             exit 1
           fi
+      
+      - name: Install benchmark dependencies
+        run: brew install coreutils
+      
+      - name: Run performance benchmarks
+        run: |
+          ./scripts/benchmark.sh
+        continue-on-error: true
+      
+      - name: Upload benchmark results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: benchmarks
+          path: BENCHMARKS.md
+

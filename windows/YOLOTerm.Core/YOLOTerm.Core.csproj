@@ -9,6 +9,8 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.0" />
+    <PackageReference Include="System.Web.HttpUtility" Version="4.3.0" />
   </ItemGroup>
 
 </Project>

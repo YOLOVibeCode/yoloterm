@@ -45,6 +45,51 @@ public class PaneView: NSView {
         terminalView.translatesAutoresizingMaskIntoConstraints = false
         
         setupConstraints()
+        setupDragAndDrop()
+    }
+    
+    private func setupDragAndDrop() {
+        // Register for drag types
+        registerForDraggedTypes([
+            .fileURL,
+            .string
+        ])
+    }
+    
+    public override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
+        // Accept files and text
+        let pasteboard = sender.draggingPasteboard
+        
+        if pasteboard.availableType(from: [.fileURL]) != nil {
+            return .copy
+        }
+        
+        if pasteboard.availableType(from: [.string]) != nil {
+            return .copy
+        }
+        
+        return []
+    }
+    
+    public override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
+        let pasteboard = sender.draggingPasteboard
+        
+        // Handle file/folder drops
+        if let fileURLs = pasteboard.readObjects(forClasses: [NSURL.self], options: nil) as? [URL] {
+            let paths = fileURLs.map { $0.path }
+            let escapedPaths = PathEscaping.quoteShellPaths(paths)
+            terminalView.send(txt: escapedPaths)
+            return true
+        }
+        
+        // Handle text drops
+        if let text = pasteboard.string(forType: .string) {
+            let preparedText = PathEscaping.preparePasteText(text)
+            terminalView.send(txt: preparedText)
+            return true
+        }
+        
+        return false
     }
     
     required init?(coder: NSCoder) {

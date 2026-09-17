@@ -24,5 +24,36 @@
     <true/>
     <key>NSPrincipalClass</key>
     <string>NSApplication</string>
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleURLName</key>
+            <string>com.yoloterm.url</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>yoloterm</string>
+            </array>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+        </dict>
+    </array>
+    <key>NSServices</key>
+    <array>
+        <dict>
+            <key>NSMenuItem</key>
+            <dict>
+                <key>default</key>
+                <string>New YOLOTerm Tab Here</string>
+            </dict>
+            <key>NSMessage</key>
+            <string>openTerminalAtPath</string>
+            <key>NSPortName</key>
+            <string>YOLOTerm</string>
+            <key>NSSendFileTypes</key>
+            <array>
+                <string>public.folder</string>
+            </array>
+        </dict>
+    </array>
 </dict>
 </plist>
